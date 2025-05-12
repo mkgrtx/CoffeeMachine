@@ -10,4 +10,16 @@ Mixing boiled water with crushed coffee beans
 Pouring coffee into the cup
 Pouring some milk into the cup
 Coffee is ready!`)
+
+	fmt.Println("Write how many cups of coffee you will need:")
+	var numCups int
+	fmt.Scanln(&numCups)
+
+	amountWater := numCups * 200
+	amountMilk := numCups * 50
+	amountBean := numCups * 15
+	fmt.Printf("For %d cups of coffee you will need\n"+
+		"%d ml of water\n"+
+		"%d ml of milk\n"+
+		"%d g of coffee beans\n", numCups, amountWater, amountMilk, amountBean)
 }
