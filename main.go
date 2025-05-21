@@ -5,10 +5,10 @@ import (
 )
 
 var (
-	// water, milk, bean
-	espresso = []int{250, 0, 16, 4}
-	latte    = []int{350, 75, 20, 7}
-	cappu    = []int{200, 100, 12, 6}
+	// water, milk, bean, money
+	expresso = [4]int{250, 0, 16, 4}
+	latte    = [4]int{350, 75, 20, 7}
+	cappu    = [4]int{200, 100, 12, 6}
 )
 
 var (
@@ -20,24 +20,30 @@ var (
 )
 
 func main() {
-	status(dWater, dMilk, dBean, dCup, dmoney)
+loop:
+	for {
+		fmt.Println("Write action (buy, fill, take, remaining, exit): ")
+		var action string
+		fmt.Scanln(&action)
+		switch action {
+		case "buy":
+			buy()
+		case "fill":
+			fill()
+		case "take":
+			take()
+		case "remaining":
+			remain(dWater, dMilk, dBean, dCup, dmoney)
+		case "exit":
+			//os.Exit(0)
+			break loop
+		}
 
-	fmt.Println("Write action (buy, fill, take): ")
-	var action string
-	fmt.Scanln(&action)
-	switch action {
-	case "buy":
-		buy()
-	case "fill":
-		fill()
-	case "take":
-		take()
 	}
-
 }
 
 func buy() {
-	fmt.Println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino: ")
+	fmt.Println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino: , back")
 	var choice string
 	fmt.Scanln(&choice)
 
@@ -48,34 +54,62 @@ func buy() {
 		makeLatte()
 	case "3":
 		makeCappu()
+	case "back":
+		main()
 	}
 }
 
+func checkIfEnough(water, milk, bean int) bool {
+	if water > dWater {
+		println("Sorry, not enough water!")
+		return false
+	}
+	if milk > dMilk {
+		println("Sorry, not enough milk!")
+		return false
+	}
+	if bean > dBean {
+		println("Sorry, not enough bean!")
+		return false
+	}
+	if dCup < 1 {
+		println("Sorry, not enough cup!")
+		return false
+	}
+	println("I have enough resources, making you a coffee!")
+	return true
+
+}
+
 func makeCappu() {
-	dWater -= cappu[0]
-	dMilk -= cappu[1]
-	dBean -= cappu[2]
-	dmoney += cappu[3]
-	dCup--
-	status(dWater, dMilk, dBean, dCup, dmoney)
+	if checkIfEnough(cappu[0], cappu[1], cappu[2]) {
+		dWater -= cappu[0]
+		dMilk -= cappu[1]
+		dBean -= cappu[2]
+		dmoney += cappu[3]
+		dCup--
+	}
 }
 
 func makeLatte() {
-	dWater -= latte[0]
-	dMilk -= latte[1]
-	dBean -= latte[2]
-	dmoney += latte[3]
-	dCup--
-	status(dWater, dMilk, dBean, dCup, dmoney)
+	if checkIfEnough(latte[0], latte[1], latte[2]) {
+		dWater -= latte[0]
+		dMilk -= latte[1]
+		dBean -= latte[2]
+		dmoney += latte[3]
+		dCup--
+	}
+
 }
 
 func makeEspresso() {
-	dWater -= espresso[0]
-	dMilk -= espresso[1]
-	dBean -= espresso[2]
-	dmoney += espresso[3]
-	dCup--
-	status(dWater, dMilk, dBean, dCup, dmoney)
+	if checkIfEnough(expresso[0], expresso[1], expresso[2]) {
+		dWater -= expresso[0]
+		dMilk -= expresso[1]
+		dBean -= expresso[2]
+		dmoney += expresso[3]
+		dCup--
+	}
 }
 
 func fill() {
@@ -94,16 +128,14 @@ func fill() {
 	dBean += bean
 	dCup += cup
 
-	status(dWater, dMilk, dBean, dCup, dmoney)
 }
 
 func take() {
 	fmt.Printf("I gave you $%d\n", dmoney)
 	dmoney = 0
-	status(dWater, dMilk, dBean, dCup, dmoney)
 }
 
-func status(dWater int, dMilk int, dBean int, dCup int, dmoney int) {
+func remain(dWater int, dMilk int, dBean int, dCup int, dmoney int) {
 
 	fmt.Printf(`The coffee machine has:
 %d ml of water
@@ -111,6 +143,7 @@ func status(dWater int, dMilk int, dBean int, dCup int, dmoney int) {
 %d g of coffee beans
 %d disposable cups
 $%d of money
+
 `, dWater, dMilk, dBean, dCup, dmoney)
 
 }
