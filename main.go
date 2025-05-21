@@ -22,7 +22,7 @@ var (
 func main() {
 loop:
 	for {
-		fmt.Println("Write action (buy, fill, take, remaining, exit): ")
+		fmt.Println("Write action (buy, fill, take, remaining, sing, exit): ")
 		var action string
 		fmt.Scanln(&action)
 		switch action {
@@ -32,6 +32,8 @@ loop:
 			fill()
 		case "take":
 			take()
+		case "sing":
+			sing()
 		case "remaining":
 			remain(dWater, dMilk, dBean, dCup, dmoney)
 		case "exit":
@@ -40,6 +42,10 @@ loop:
 		}
 
 	}
+}
+
+func sing() {
+	fmt.Println("La La La ....\nLa La La.....\nLa La La....")
 }
 
 func buy() {
